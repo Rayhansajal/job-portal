@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
+</head>
+
+<body>
+<header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand ms-5 font-weight-bold h5" th:href="@{/dashboard/}">
+           Job Lagbe<span class="logo_com font-weight-bold h5" style="color: white">.com</span>
+        </a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarTogglerDemo"
+                aria-controls="navbarTogglerDemo"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo">
+            <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
+
+
+                <li class="nav-item" sec:authorize="hasAuthority('job_seeker')">
+                    <a class="nav-link" th:href="@{/dashboard/}">
+                        <i class="fa-brands fa-searchengin"></i> Search for Jobs
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('job_seeker')">
+                    <a class="nav-link" th:href="@{/saved-jobs/}">
+                        <i class="fa-solid fa-eye"></i> View Saved Jobs
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('job_seeker')">
+                    <a class="nav-link" th:href="@{/job-seeker-profile/}">
+                        <i class="fa-solid fa-pencil"></i> Edit Profile
+                    </a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasAuthority('recruiter')">
+                    <a class="nav-link" th:href="@{/dashboard/add}">
+                        <i class="fa-solid fa-file-circle-plus"></i> Post New Job
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('recruiter')">
+                    <a class="nav-link" th:href="@{/dashboard/}">
+                        <i class="fa-solid fa-eye"></i> View Your Jobs
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('recruiter')">
+                    <a class="nav-link" th:href="@{/recruiter-profile/}">
+                        <i class="fa-solid fa-pencil"></i> Edit Account
+                    </a>
+                </li>
+            </ul>
+
+            <span class="navbar-text px-2 me-3" th:if="${user.firstName != null and user.lastName != null}"
+                  th:text="${user.firstName + ' ' + user.lastName}">
+            </span>
+            <span class="navbar-text px-2 me-3" th:unless="${user.firstName != null and user.lastName != null}"
+                  th:text="${username}">
+            </span>
+
+            <button class="btn btn-outline-light me-5" onclick="window.location.href='/logout'">Logout</button>
+        </div>
+    </div>
+</header>
+
+<section class="section container mt-4">
+    <article>
+        <div class="box mb-4" sec:authorize="hasAuthority('recruiter')">
+            <h1 class="primary-title">Recruiter Dashboard</h1>
+        </div>
+        <div class="box mt-3" sec:authorize="hasAuthority('job_seeker')">
+            <label class="large-label px-3 mb-3">Search Results</label>
+            <th:block th:each="jobPost : ${jobPost}">
+                <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
+                   style="text-decoration: none; color: black;">
+                    <div class="job-row">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="job-title text-left">
+                                    [[${jobPost.jobTitle}]]
+                                    <span class="title-span" sec:authorize="hasAuthority('recruiter')"
+                                          th:text="'(' + ${jobPost.totalCandidates} + ' Candidates Applied)'"></span>
+                                    <span class="title-span" sec:authorize="hasAuthority('job_seeker')" th:if="${jobPost.isActive}">
+                                        (Applied)
+                                    </span>
+                                    <span class="title-span" sec:authorize="hasAuthority('job_seeker')" th:if="${jobPost.isSaved}">
+                                        (Saved)
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <label th:text="${jobPost.jobLocationId.city + ', ' + jobPost.jobLocationId.state}">City State</label>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <label th:text="${jobPost.jobCompanyId.name}">Recruiter Company Name</label>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </th:block>
+        </div>
+    </article>
+</section>
+
+<script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
