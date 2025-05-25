@@ -42,8 +42,8 @@ public class JobPostActivity {
   private String jobType;
   private String remote;
 
-  @DateTimeFormat(pattern = "dd-MM-yyyy")
-  private Date jobPosteDate;
+  @DateTimeFormat(pattern = "DD-MM-YYYY")
+  private Date jobPostedDate;
   private String jobTitle;
 
 
