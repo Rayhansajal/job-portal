@@ -18,6 +18,8 @@ import java.util.List;
 public class JobPostActivityServiceImpl implements JobPostActivityService {
 
     private final JobPostActivityRepository jobPostActivityRepository;
+
+
     @Override
     public JobPostActivity addNew(JobPostActivity jobPostActivity) {
         return jobPostActivityRepository.save(jobPostActivity);
@@ -30,8 +32,9 @@ public class JobPostActivityServiceImpl implements JobPostActivityService {
         for (IRecruiterJobs rec : recruiterJobsDtos) {
             JobLocation loc= new JobLocation(rec.getLocationId(),rec.getCity(),rec.getState(),rec.getCountry());
             JobCompany comp = new JobCompany(rec.getCompanyId(), rec.getName(), "");
-            recruiterJobsDtoList.add(new RecruiterJobsDto(rec.getTotalCandidates(),rec.getJobPostId(),rec.getJobTitle(),loc,comp));
+            recruiterJobsDtoList.add(new RecruiterJobsDto(rec.getTotalCandidates(),rec.getJob_post_id(),rec.getJob_title(),loc,comp));
         }
+
         return recruiterJobsDtoList;
     }
 

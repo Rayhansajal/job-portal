@@ -21,7 +21,7 @@ public class Users {
     private String email;
     private String password;
     private boolean isActive;
-    @DateTimeFormat(pattern = "dd-mm-yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date registrationDate;
 
     @JoinColumn(name = "userTypeId",referencedColumnName = "userTypeId")

@@ -17,4 +17,6 @@ import lombok.Setter;
         private String jobTitle;
         private JobLocation jobLocationId;
         private JobCompany jobCompanyId;
+
+
     }

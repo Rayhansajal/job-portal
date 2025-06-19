@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "recruiter")
+@Table(name = "recruiter_profile")
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecruiterProfile {
     @Id
     private Long userAccountId;
@@ -27,7 +27,16 @@ public class RecruiterProfile {
     @Column(nullable = true,length = 64)
     private String profilePhoto;
 
+
     public RecruiterProfile(Users users) {
+
         this.usersId = users;
+    }
+
+    @Transient
+    public String getPhotosImagePath(){
+        if(profilePhoto == null)return  null;{
+        return "photos/recruiter/" + userAccountId + "/" + profilePhoto;
+        }
     }
 }
