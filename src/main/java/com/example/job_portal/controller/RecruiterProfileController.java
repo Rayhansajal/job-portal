@@ -11,15 +11,19 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 import java.util.Optional;
 
-@ControllerAdvice
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/recruiter-profile")
 public class RecruiterProfileController {
@@ -31,21 +35,25 @@ public class RecruiterProfileController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
-            Users users = userRepository.findAllByEmail(currentUsername).orElseThrow(() ->
-                    new UsernameNotFoundException("Could not" + "find user"));
+            Users users = userRepository.findAllByEmail(currentUsername)
+                    .orElseThrow(() -> new UsernameNotFoundException("Could not find user"));
 
             Optional<RecruiterProfile> recruiterProfile = recruiterProfileService.getOne(users.getUserId());
-            if (!recruiterProfile.isEmpty())
-                model.addAttribute("recruiterProfile", recruiterProfile.get());
-            
-
+            if (recruiterProfile.isPresent()) {
+                model.addAttribute("profile", recruiterProfile.get());
+            } else {
+                model.addAttribute("profile", new RecruiterProfile());
+            }
+        } else {
+            model.addAttribute("profile", new RecruiterProfile());
         }
-        return "recruiter-profile";
+        return "recruiter-profile"; // make sure recruiter-profile.html exists in templates
     }
 
+
     @PostMapping("/addNew")
-    public String addNew (RecruiterProfile recruiterProfile, @RequestParam ("image")MultipartFile multipartFile
-    , Model model) {
+    public String addNew (RecruiterProfile recruiterProfile, @RequestParam ("image")
+                              MultipartFile multipartFile,Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
@@ -53,7 +61,7 @@ public class RecruiterProfileController {
             recruiterProfile.setUsersId(users);
             recruiterProfile.setUserAccountId(users.getUserId());
         }
-        model.addAttribute("recruiterProfile", recruiterProfile);
+        model.addAttribute("profile", recruiterProfile);
         String filename= "";
         if(!multipartFile.getOriginalFilename().equals("")){
             filename = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));

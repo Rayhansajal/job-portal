@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "job_seeker")
+@Table(name = "job_seeker_profile")
 @Getter
 @Setter
 @ToString
@@ -39,5 +39,13 @@ public class JobSeekerProfile {
 
     public JobSeekerProfile(Users users) {
         this.usersId = users;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (profilePhoto == null) return null;
+        {
+            return "photos/recruiter/" + userAccountId + "/" + profilePhoto;
+        }
     }
 }
