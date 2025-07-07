@@ -84,12 +84,6 @@ public class JobPostActivityController {
     }
 
 
-
-
-
-
-
-
     @GetMapping("/test-recruiter-jobs")
     @ResponseBody
     public List<IRecruiterJobs> testRecruiterJobs() {

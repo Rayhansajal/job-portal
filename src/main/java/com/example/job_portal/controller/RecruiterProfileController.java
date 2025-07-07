@@ -47,7 +47,7 @@ public class RecruiterProfileController {
         } else {
             model.addAttribute("profile", new RecruiterProfile());
         }
-        return "recruiter-profile"; // make sure recruiter-profile.html exists in templates
+        return "recruiter-profile";
     }
 
 
@@ -63,7 +63,7 @@ public class RecruiterProfileController {
         }
         model.addAttribute("profile", recruiterProfile);
         String filename= "";
-        if(!multipartFile.getOriginalFilename().equals("")){
+        if(!multipartFile.getOriginalFilename().equals(" ")){
             filename = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             recruiterProfile.setProfilePhoto(filename);
         }

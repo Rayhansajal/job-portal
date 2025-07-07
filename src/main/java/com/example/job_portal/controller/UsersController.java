@@ -49,7 +49,7 @@ public class UsersController {
         }
 
         usersService.addNewUser(users);
-        return "dashboard";
+        return "/login";
 
 
     }
